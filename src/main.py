@@ -5,9 +5,12 @@ import uvicorn
 from fastapi import APIRouter, Depends, FastAPI
 
 from lifespan import lifespan
+from requests import Request
 
 
-async def get_pg_connection() -> asyncpg.Connection: ...
+async def get_pg_connection(request: Request) -> asyncpg.Connection:
+    async with request.state.db_pool.acquire() as conn:
+        yield conn
 
 
 async def get_db_version(
