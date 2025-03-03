@@ -2,7 +2,7 @@ ARG WORKDIR="/app"
 
 # --- Builder image ---
 
-FROM python:3.12-slim AS builder
+FROM python:3.12-alpine AS builder
 
 ARG WORKDIR
 
@@ -20,7 +20,7 @@ RUN poetry install
 
 # --- Target image ---
 
-FROM python:3.12-slim
+FROM python:3.12-alpine
 
 ARG WORKDIR
 
