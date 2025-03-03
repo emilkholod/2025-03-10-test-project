@@ -9,7 +9,7 @@ async def get_pg_connection() -> asyncpg.Connection: ...
 
 
 async def get_db_version(
-    conn: Annotated[asyncpg.Connection, Depends(get_pg_connection)]
+    conn: Annotated[asyncpg.Connection, Depends(get_pg_connection)],
 ):
     return await conn.fetchval("SELECT version()")
 
