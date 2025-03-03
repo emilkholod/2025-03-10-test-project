@@ -8,7 +8,7 @@ services:
       - .env
     command: uvicorn main:create_app --host 0.0.0.0 --reload --factory
     volumes:
-      - ./app:/app/
+      - ./src:/src/
 
   database:
     image: postgres:16.2-alpine
