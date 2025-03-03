@@ -1,15 +1,32 @@
-FROM python:3.12-slim
+ARG WORKDIR="/app"
+
+# --- Builder image ---
+
+FROM python:3.12-slim AS builder
+
+ARG WORKDIR
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-WORKDIR /app
+WORKDIR ${WORKDIR}
+
+RUN pip install poetry \
+    && poetry config virtualenvs.in-project true
 
 COPY pyproject.toml poetry.lock ./
 
-RUN pip install --no-cache-dir poetry \
-    && poetry config virtualenvs.in-project true \
-    && poetry install --no-ansi
+RUN poetry install
+
+# --- Target image ---
+
+FROM python:3.12-slim
+
+ARG WORKDIR
+
+WORKDIR ${WORKDIR}
+
+COPY --from=builder ${WORKDIR} .
 
 COPY ./src/ ./src
 
