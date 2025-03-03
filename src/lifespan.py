@@ -1,0 +1,28 @@
+from contextlib import asynccontextmanager
+from typing import AsyncIterator, TypedDict
+
+import asyncpg
+from fastapi import FastAPI
+
+import config
+
+
+class LifespanVariables(TypedDict):
+    db_pool: asyncpg.Pool
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[LifespanVariables]:
+    db_pool = await asyncpg.create_pool(
+        user=config.DB_USER,
+        password=config.DB_PASSWORD,
+        database=config.DB_NAME,
+        host=config.DB_HOST,
+        port=config.DB_PORT,
+    )
+
+    yield {
+        "db_pool": db_pool,
+    }
+
+    await db_pool.close()

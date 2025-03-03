@@ -1,10 +1,8 @@
+import pytest
 from fastapi.testclient import TestClient
-
-from src.main import create_app
 
 
 class TestClientMixin:
-
-    @classmethod
-    def setup_class(cls):
-        cls.client = TestClient(create_app())
+    @pytest.fixture(autouse=True)
+    def _client(self, client: TestClient):
+        self.client = client

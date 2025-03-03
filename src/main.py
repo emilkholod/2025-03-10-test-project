@@ -4,6 +4,8 @@ import asyncpg
 import uvicorn
 from fastapi import APIRouter, Depends, FastAPI
 
+from lifespan import lifespan
+
 
 async def get_pg_connection() -> asyncpg.Connection: ...
 
@@ -21,7 +23,7 @@ def register_routes(app: FastAPI):
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="e-Comet")
+    app = FastAPI(title="e-Comet", lifespan=lifespan)
     register_routes(app)
     return app
 
