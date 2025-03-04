@@ -2,10 +2,9 @@ from typing import Annotated
 
 import asyncpg
 import uvicorn
-from fastapi import APIRouter, Depends, FastAPI
+from fastapi import APIRouter, Depends, FastAPI, Request
 
 from lifespan import lifespan
-from requests import Request
 
 
 async def get_pg_connection(request: Request) -> asyncpg.Connection:
