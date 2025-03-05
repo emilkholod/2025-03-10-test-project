@@ -6,7 +6,7 @@ build:
 
 # Start the containers defined in docker-compose.yml
 up:
-	docker-compose -d up
+	docker-compose up -d
 	docker-compose logs -f app
 
 # Down the containers defined in docker-compose.yml
