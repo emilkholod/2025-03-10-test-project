@@ -1,6 +1,6 @@
 from starlette.config import Config
 
-config = Config(".env")
+config = Config()
 
 ENV: str = config("ENV", default="prod")
 

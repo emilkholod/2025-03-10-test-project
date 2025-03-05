@@ -8,8 +8,6 @@ services:
         - ENV=dev
     ports:
       - "8000:8000"
-    env_file:
-      - .env
     command: uvicorn main:create_app --host 0.0.0.0 --reload --factory
     volumes:
       - ./src:/app/src/
