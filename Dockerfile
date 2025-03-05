@@ -29,9 +29,11 @@ FROM python:3.12-alpine
 
 ARG WORKDIR
 
+USER 1000
+
 WORKDIR "${WORKDIR}"
 
-COPY --from=builder "${WORKDIR}" .
+COPY --chown=1000:1000 --from=builder "${WORKDIR}" .
 
 COPY ./src/ ./src
 
