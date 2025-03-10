@@ -14,6 +14,7 @@ repos:
     hooks:
       - id: flake8
         additional_dependencies: [flake8-bugbear, flake8-print, flake8-string-format, flake8-comprehensions, flake8-quotes, Flake8-pyproject]
+        entry: flake8 --filename=1/**/*.py --toml-config=1/pyproject.toml
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -42,7 +43,9 @@ repos:
     rev: 2.1.1
     hooks:
       - id: poetry-check
+        entry: poetry check -C 1
       - id: poetry-lock
+        entry: poetry lock -C 1
 
   - repo: https://github.com/google/yamlfmt
     rev: v0.16.0
