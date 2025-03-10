@@ -29,13 +29,13 @@ FROM python:3.12-alpine
 
 ARG WORKDIR
 
-USER 1000
+USER nobody
 
 WORKDIR "${WORKDIR}"
 
-COPY --chown=1000:1000 --from=builder "${WORKDIR}" .
+COPY --chown=nobody:nobody --from=builder "${WORKDIR}" .
 
-COPY --chown=1000:1000 ./src/ ./src
+COPY --chown=nobody:nobody ./src/ ./src
 
 ENV PYTHONPATH="/app/src"
 ENV PATH="/app/.venv/bin:$PATH"
