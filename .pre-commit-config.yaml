@@ -43,9 +43,17 @@ repos:
     rev: 2.1.1
     hooks:
       - id: poetry-check
+        name: poetry check project 1
         entry: poetry check -C 1
+      - id: poetry-check
+        name: poetry check project 2
+        entry: poetry check -C 2
       - id: poetry-lock
+        name: poetry lock project 1
         entry: poetry lock -C 1
+      - id: poetry-lock
+        name: poetry lock project 2
+        entry: poetry lock -C 2
 
   - repo: https://github.com/google/yamlfmt
     rev: v0.16.0
@@ -57,9 +65,3 @@ repos:
     rev: v2.12.0
     hooks:
       - id: hadolint-docker
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: 'v1.15.0'
-    hooks:
-      - id: mypy
-        additional_dependencies: [types-requests, asyncpg==0.30.0, fastapi==0.115.6, uvicorn==0.34.0]

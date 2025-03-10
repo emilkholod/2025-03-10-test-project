@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        - ENV=dev
+    volumes:
+      - ./src:/app/src/
+      - ./tests:/app/tests/
