@@ -33,9 +33,9 @@ USER nobody
 
 WORKDIR "${WORKDIR}"
 
-COPY --chown=nobody:nobody --from=builder "${WORKDIR}" .
+COPY --from=builder "${WORKDIR}" .
 
-COPY --chown=nobody:nobody ./src/ ./src
+COPY ./src/ ./src
 
 ENV PYTHONPATH="/app/src"
 ENV PATH="/app/.venv/bin:$PATH"
