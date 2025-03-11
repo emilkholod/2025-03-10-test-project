@@ -11,8 +11,8 @@ WITH cte_phrases_delta_views as (
         ) as full_hour
     FROM phrases_views final
     WHERE campaign_id = 1111111
-        AND dt >= toDate('2025-01-01')
-        AND dt < toDate('2025-01-01') + 1
+        AND dt >= today()
+        AND dt < today() + 1
     ORDER BY phrase, hour DESC
 ), cte_phrases_views_by_hours as (
     SELECT
