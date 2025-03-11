@@ -1,5 +1,5 @@
 [project]
-name = "fastapi-postgresql-version"
+name = "my_fastapi_app"
 version = "0.1.0"
 description = ""
 authors = [
@@ -15,9 +15,6 @@ dependencies = [
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry]
-package-mode = false
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"

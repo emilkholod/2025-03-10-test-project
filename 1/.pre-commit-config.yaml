@@ -43,9 +43,9 @@ repos:
     rev: 2.1.1
     hooks:
       - id: poetry-check
-        entry: poetry check
+        entry: poetry check --project 1/
       - id: poetry-lock
-        entry: poetry lock
+        entry: poetry lock --project 1/
 
   - repo: https://github.com/google/yamlfmt
     rev: v0.16.0

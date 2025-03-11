@@ -23,5 +23,5 @@ sh:
 
 # Build prod image and then you can push to docker repository
 prod:
-	docker build --tag fastapi-postgresql-version:latest .
+	docker build --tag my_fastapi_app:latest .
 	echo "TODO: After that should be called docker push to production"
