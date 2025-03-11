@@ -1,15 +1,46 @@
 repos:
   - repo: local
     hooks:
-      - id: 1st project
+      - id: 1st-project
         name: pre-commit for 1st project
         entry: pre-commit run -c 1/.pre-commit-config.yaml --files 1
         language: system
         verbose: true
         files: ^1/
+        fail_fast: true
       - id: 2nd-project
         name: pre-commit for 2nd project
         entry: pre-commit run -c 2/.pre-commit-config.yaml --files 2
         language: system
         verbose: true
         files: ^2/
+        fail_fast: true
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-ast
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      - id: detect-private-key
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: trailing-whitespace
+
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.4.2
+    hooks:
+      - id: forbid-tabs
+        types: [python]
+      - id: remove-tabs
+        types: [python]
+
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.16.0
+    hooks:
+      - id: yamlfmt
+        args: [-formatter, retain_line_breaks_single=true]
