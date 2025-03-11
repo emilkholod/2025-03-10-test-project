@@ -1,8 +1,8 @@
 from dataclasses import asdict, astuple
 from datetime import datetime
 
-import clickhouse
-from dto import Repository
+from my_aiohttp_app import clickhouse
+from my_aiohttp_app.dto import Repository
 
 
 async def save_repositories(repositories: list[Repository]):

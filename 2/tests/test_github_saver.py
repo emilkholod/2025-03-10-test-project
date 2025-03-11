@@ -1,7 +1,7 @@
 import pytest
 from tests.factories import RepositoryFactory
 
-from github_repos_saver import save_repositories
+from my_aiohttp_app.github_repos_saver import save_repositories
 
 
 @pytest.mark.asyncio

@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from aiolimiter import AsyncLimiter
 
-from main import GithubReposScrapper
+from my_aiohttp_app.main import GithubReposScrapper
 
 
 @pytest.mark.asyncio

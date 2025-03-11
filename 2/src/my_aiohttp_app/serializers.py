@@ -2,7 +2,7 @@ from copy import deepcopy
 from dataclasses import fields
 from typing import Any
 
-from dto import Repository
+from my_aiohttp_app.dto import Repository
 
 
 class RepositorySerialzer:

@@ -1,6 +1,6 @@
 import factory
 
-from dto import Repository, RepositoryAuthorCommitsNum
+from my_aiohttp_app.dto import Repository, RepositoryAuthorCommitsNum
 
 
 class RepositoryAuthorCommitsNumFactory(factory.Factory):

@@ -6,7 +6,7 @@ from itertools import batched
 from aiochclient import ChClient
 from aiohttp import ClientSession
 
-import config
+from my_aiohttp_app import config
 
 
 class ClickhouseManager(ABC):

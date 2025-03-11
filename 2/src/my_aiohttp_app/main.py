@@ -7,9 +7,9 @@ from typing import Any, Final, Optional, Self, Type
 from aiohttp import ClientError, ClientSession
 from aiolimiter import AsyncLimiter
 
-import config
-from dto import Repository, RepositoryAuthorCommitsNum
-from serializers import RepositorySerialzer
+from my_aiohttp_app import config
+from my_aiohttp_app.dto import Repository, RepositoryAuthorCommitsNum
+from my_aiohttp_app.serializers import RepositorySerialzer
 
 GITHUB_API_BASE_URL: Final[str] = "https://api.github.com"
 
