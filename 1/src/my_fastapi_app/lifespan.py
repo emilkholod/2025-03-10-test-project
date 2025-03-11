@@ -4,7 +4,7 @@ from typing import AsyncIterator
 import asyncpg
 from fastapi import FastAPI
 
-import config
+from my_fastapi_app import config
 
 
 @asynccontextmanager

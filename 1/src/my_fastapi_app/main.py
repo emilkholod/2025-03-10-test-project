@@ -4,7 +4,7 @@ import asyncpg
 import uvicorn
 from fastapi import APIRouter, Depends, FastAPI, Request
 
-from lifespan import lifespan
+from my_fastapi_app.lifespan import lifespan
 
 
 async def get_pg_connection(request: Request) -> asyncpg.Connection:
@@ -31,4 +31,4 @@ def create_app() -> FastAPI:
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:create_app", factory=True)
+    uvicorn.run("my_fastapi_app.main:create_app", factory=True)
