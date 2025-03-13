@@ -18,9 +18,9 @@ COPY pyproject.toml poetry.lock ./
 
 ARG ENV=prod
 RUN if [ "$ENV" = "dev" ]; then \
-        poetry install; \
+        poetry install --no-root; \
     else \
-        poetry install --without dev; \
+        poetry install --without dev --no-root; \
     fi
 
 # --- Target image ---
