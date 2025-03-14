@@ -1,20 +1,78 @@
 repos:
-  - repo: local
+  - repo: https://github.com/PyCQA/isort
+    rev: 6.0.1
     hooks:
-      - id: 1st-project
-        name: pre-commit for 1st project
-        entry: pre-commit run -c 1/.pre-commit-config.yaml --files 1
-        language: system
-        verbose: true
-        files: ^1/
-        fail_fast: true
-      - id: 2nd-project
-        name: pre-commit for 2nd project
-        entry: pre-commit run -c 2/.pre-commit-config.yaml --files 2
-        language: system
-        verbose: true
-        files: ^2/
-        fail_fast: true
+      - id: isort
+        name: isort 1st project
+        args:
+          - --settings=1
+        files: ^1
+      - id: isort
+        name: isort 2nd project
+        args:
+          - --settings=2
+        files: ^2
+
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 25.1.0
+    hooks:
+      - id: black
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        name: flake8 1st project
+        additional_dependencies: [flake8-bugbear, flake8-print, flake8-string-format, flake8-comprehensions, flake8-quotes, Flake8-pyproject]
+        args: [--toml-config=1/pyproject.toml]
+        files: ^1
+      - id: flake8
+        name: flake8 2nd project
+        additional_dependencies: [flake8-bugbear, flake8-print, flake8-string-format, flake8-comprehensions, flake8-quotes, Flake8-pyproject]
+        args: [--toml-config=2/pyproject.toml]
+        files: ^2
+
+  - repo: https://github.com/python-poetry/poetry
+    rev: 2.1.1
+    hooks:
+      - id: poetry-check
+        name: poetry-check 1st project
+        entry: poetry check --project 1/
+        files: ^1
+      - id: poetry-lock
+        name: poetry-lock 1st project
+        entry: poetry lock --project 1/
+        files: ^1
+      - id: poetry-check
+        name: poetry-check 2nd project
+        entry: poetry check --project 2/
+        files: ^2
+      - id: poetry-lock
+        name: poetry-lock 2nd project
+        entry: poetry lock --project 2/
+        files: ^2
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: 'v1.15.0'
+    hooks:
+      - id: mypy
+        name: mypy 1st project
+        additional_dependencies:
+          - types-requests
+          - asyncpg==0.30.0
+          - fastapi==0.115.6
+          - uvicorn==0.34.0
+        entry: mypy --config-file 1/pyproject.toml
+        files: ^1
+      - id: mypy
+        name: mypy 2nd project
+        additional_dependencies:
+          - types-requests
+          - asyncpg==0.30.0
+          - fastapi==0.115.6
+          - uvicorn==0.34.0
+        entry: mypy --config-file 2/pyproject.toml
+        files: ^2
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
