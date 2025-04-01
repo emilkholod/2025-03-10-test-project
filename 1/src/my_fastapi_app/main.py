@@ -1,27 +1,36 @@
-from typing import Annotated
+from typing import Annotated, Any
 
 import asyncpg
 import uvicorn
-from fastapi import APIRouter, Depends, FastAPI, Request
+from fastapi import APIRouter, Depends, FastAPI
+from fastapi.responses import RedirectResponse
 
 from my_fastapi_app.lifespan import lifespan
+from my_fastapi_app.state import State, get_state
 
 
-async def get_pg_connection(request: Request) -> asyncpg.Connection:
-    async with request.state.db_pool.acquire() as conn:
+async def get_pg_connection(
+    state: Annotated[State, Depends(get_state)],
+) -> asyncpg.Connection:
+    async with state.db_pool.acquire() as conn:
         yield conn
 
 
 async def get_db_version(
     conn: Annotated[asyncpg.Connection, Depends(get_pg_connection)],
-):
+) -> Any:
     return await conn.fetchval("SELECT version()")
 
 
-def register_routes(app: FastAPI):
+async def redirect_to_docs() -> RedirectResponse:
+    return RedirectResponse("/docs")
+
+
+def register_routes(app: FastAPI) -> None:
     router = APIRouter(prefix="/api")
     router.add_api_route(path="/db_version", endpoint=get_db_version)
     app.include_router(router)
+    app.add_api_route(path="/", endpoint=redirect_to_docs, include_in_schema=False)
 
 
 def create_app() -> FastAPI:

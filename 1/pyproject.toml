@@ -38,3 +38,7 @@ exclude = [
     "__pycache__",
 ]
 inline-quotes = '"'
+
+[tool.mypy]
+strict = true
+plugins = ['pydantic.mypy']
