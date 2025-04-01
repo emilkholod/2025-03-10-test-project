@@ -1,13 +1,23 @@
-from starlette.config import Config
+from functools import lru_cache
 
-config = Config()
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-ENV: str = config("ENV", default="prod")
 
-DB_HOST: str = config("DB_HOST", default="database")
-DB_PORT: int = config("DB_PORT", cast=int, default=5432)
-DB_NAME: str = config("DB_NAME", default="postgres")
-DB_USER: str = config("DB_USER", default="root")
-DB_PASSWORD: str = config("DB_PASSWORD", default="root")
-MIN_CONNECTIONS_COUNT: int = config("MIN_CONNECTIONS_COUNT", cast=int, default=10)
-MAX_CONNECTIONS_COUNT: int = config("MAX_CONNECTIONS_COUNT", cast=int, default=10)
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix="MY_FASTAPI_APP_", case_sensitive=True)
+
+    ENV: str = Field("prod")
+
+    DB_HOST: str = Field("database")
+    DB_PORT: int = Field(5432)
+    DB_NAME: str = Field("postgres")
+    DB_USER: str = Field("root")
+    DB_PASSWORD: str = Field("root")
+    MIN_CONNECTIONS_COUNT: int = Field(10)
+    MAX_CONNECTIONS_COUNT: int = Field(10)
+
+
+@lru_cache(maxsize=1)
+def get_settings():
+    return Settings()

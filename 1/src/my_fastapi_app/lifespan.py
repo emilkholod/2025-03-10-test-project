@@ -4,17 +4,19 @@ from typing import AsyncIterator
 import asyncpg
 from fastapi import FastAPI
 
-from my_fastapi_app import config
+from my_fastapi_app.config import get_settings
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator:
+    settings = get_settings()
+
     db_pool = await asyncpg.create_pool(
-        user=config.DB_USER,
-        password=config.DB_PASSWORD,
-        database=config.DB_NAME,
-        host=config.DB_HOST,
-        port=config.DB_PORT,
+        user=settings.DB_USER,
+        password=settings.DB_PASSWORD,
+        database=settings.DB_NAME,
+        host=settings.DB_HOST,
+        port=settings.DB_PORT,
     )
 
     yield {
