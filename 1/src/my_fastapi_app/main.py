@@ -5,12 +5,12 @@ import uvicorn
 from fastapi import APIRouter, Depends, FastAPI
 from fastapi.responses import RedirectResponse
 
-from my_fastapi_app.lifespan import lifespan
-from my_fastapi_app.state import State, get_state
+from my_fastapi_app.core.lifespan import lifespan
+from my_fastapi_app.core.state import TypedState
 
 
 async def get_pg_connection(
-    state: Annotated[State, Depends(get_state)],
+    state: TypedState,
 ) -> asyncpg.Connection:
     async with state.db_pool.acquire() as conn:
         yield conn
@@ -22,7 +22,7 @@ async def get_db_version(
     return await conn.fetchval("SELECT version()")
 
 
-async def redirect_to_docs() -> RedirectResponse:
+def redirect_to_docs() -> RedirectResponse:
     return RedirectResponse("/docs")
 
 

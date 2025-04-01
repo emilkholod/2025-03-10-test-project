@@ -4,7 +4,7 @@ from typing import AsyncIterator, TypedDict
 import asyncpg
 from fastapi import FastAPI
 
-from my_fastapi_app.config import get_settings
+from my_fastapi_app.core.config import get_settings
 
 
 class LifeSpanState(TypedDict):
