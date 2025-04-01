@@ -13,14 +13,16 @@ class LifeSpanState(TypedDict):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[LifeSpanState]:
-    settings = get_settings()
+    settings = await get_settings()
+
+    db_settings = settings.DATABASE_SETTINGS
 
     db_pool = await asyncpg.create_pool(
-        user=settings.DB_USER,
-        password=settings.DB_PASSWORD,
-        database=settings.DB_NAME,
-        host=settings.DB_HOST,
-        port=settings.DB_PORT,
+        user=db_settings.DB_USER,
+        password=db_settings.DB_PASSWORD,
+        database=db_settings.DB_NAME,
+        host=db_settings.DB_HOST,
+        port=db_settings.DB_PORT,
     )
 
     yield {
