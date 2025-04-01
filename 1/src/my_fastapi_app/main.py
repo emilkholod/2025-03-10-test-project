@@ -6,11 +6,11 @@ from fastapi import APIRouter, Depends, FastAPI
 from fastapi.responses import RedirectResponse
 
 from my_fastapi_app.core.lifespan import lifespan
-from my_fastapi_app.core.state import TypedState
+from my_fastapi_app.core.state import RequestState
 
 
 async def get_pg_connection(
-    state: TypedState,
+    state: RequestState,
 ) -> asyncpg.Connection:
     async with state.db_pool.acquire() as conn:
         yield conn
@@ -22,7 +22,7 @@ async def get_db_version(
     return await conn.fetchval("SELECT version()")
 
 
-def redirect_to_docs() -> RedirectResponse:
+async def redirect_to_docs() -> RedirectResponse:
     return RedirectResponse("/docs")
 
 

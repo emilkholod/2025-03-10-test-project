@@ -15,4 +15,4 @@ async def get_state(request: Request) -> State:
     return State(db_pool)
 
 
-TypedState = Annotated[State, Depends(get_state)]
+RequestState = Annotated[State, Depends(get_state)]
