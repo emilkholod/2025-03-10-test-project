@@ -63,6 +63,7 @@ repos:
           - fastapi==0.115.6
           - uvicorn==0.34.0
           - pydantic-settings==2.8.1
+          - pytest==8.3.5
         entry: mypy --config-file 1/pyproject.toml
         files: ^1
       - id: mypy

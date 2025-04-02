@@ -42,3 +42,7 @@ inline-quotes = '"'
 [tool.mypy]
 strict = true
 plugins = ['pydantic.mypy']
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
