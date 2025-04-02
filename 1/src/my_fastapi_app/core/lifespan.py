@@ -13,7 +13,7 @@ class LifeSpanState(TypedDict):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[LifeSpanState]:
-    settings = await get_settings()
+    settings = get_settings()
 
     db_settings = settings.DATABASE_SETTINGS
 
