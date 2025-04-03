@@ -1,10 +1,10 @@
 import asyncpg
 
-from my_fastapi_app.core.state import RequestState
+from my_fastapi_app.core.request import Request
 
 
 async def get_pg_connection(
-    state: RequestState,
+    request: Request,
 ) -> asyncpg.Connection:
-    async with state.db_pool.acquire() as conn:
+    async with request.state.db_pool.acquire() as conn:
         yield conn
