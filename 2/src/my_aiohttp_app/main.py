@@ -2,8 +2,7 @@ import asyncio
 from collections import Counter
 from datetime import datetime, timedelta
 from itertools import count
-from types import TracebackType
-from typing import Any, Final, Optional, Self, Type
+from typing import Any, Final
 
 from aiohttp import ClientSession
 from aiolimiter import AsyncLimiter
@@ -20,20 +19,15 @@ class GithubReposScrapper:
     semaphore = asyncio.Semaphore(config.MCR)
     limiter = AsyncLimiter(config.RPS)
 
-    def __init__(self, access_token: str):
-        self._session = ClientSession(
-            headers={
-                "Accept": "application/vnd.github.v3+json",
-                "Authorization": f"Bearer {access_token}",
-            }
-        )
+    def __init__(self, session: ClientSession):
+        self.session = session
 
     @retry
     async def _make_request(
         self, endpoint: str, method: str = "GET", params: dict[str, Any] | None = None
     ) -> Any:
         url = f"{GITHUB_API_BASE_URL}/{endpoint}"
-        async with self._session.request(method, url, params=params) as response:
+        async with self.session.request(method, url, params=params) as response:
             if response.status == 403:
                 reset_time = response.headers.get("X-RateLimit-Reset")
                 if reset_time:
@@ -116,17 +110,3 @@ class GithubReposScrapper:
             ]
 
         return repositories
-
-    async def close(self):
-        await self._session.close()
-
-    async def __aenter__(self) -> Self:
-        return self
-
-    async def __aexit__(
-        self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
-    ) -> None:
-        await self.close()
