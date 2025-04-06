@@ -7,9 +7,8 @@ from typing import Any, Final
 from aiohttp import ClientSession
 from aiolimiter import AsyncLimiter
 
-from my_aiohttp_app import config
-from my_aiohttp_app.dto import Repository, RepositoryAuthorCommitsNum
-from my_aiohttp_app.schema import RepositoryResponseSchema
+from my_aiohttp_app import config, schema
+from my_aiohttp_app.dto import Repository
 from my_aiohttp_app.utils import RetryException, retry
 
 GITHUB_API_BASE_URL: Final[str] = "https://api.github.com"
@@ -87,7 +86,7 @@ class GithubReposScrapper:
             return []
 
         repositories = [
-            Repository(**RepositoryResponseSchema.load(r)) for r in repositories_data
+            schema.RepositoryResponseSchema(**r).get_object() for r in repositories_data
         ]
 
         params = {"since": (datetime.now() - timedelta(days=1)).isoformat()}
@@ -105,7 +104,9 @@ class GithubReposScrapper:
                 c["commit"]["author"]["name"] for c in author_commits_num
             )
             repo.authors_commits_num_today = [
-                RepositoryAuthorCommitsNum(author=author, commits_num=commits_num)
+                schema.RepositoryAuthorCommitsNumSchema(
+                    author=author, commits_num=commits_num
+                ).get_object()
                 for author, commits_num in commits_per_author.items()
             ]
 
