@@ -3,7 +3,10 @@ from environs import env
 env.read_env()
 
 MCR = env.int("MCR", 5)
+"""Maximum concurrent requests"""
+
 RPS = env.int("RPS", 10)
+"""Requests per second"""
 
 GITHUB_ACCESS_TOKEN = env.str("GITHUB_ACCESS_TOKEN", "")
 

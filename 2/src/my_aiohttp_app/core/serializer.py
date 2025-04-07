@@ -1,6 +1,7 @@
 from abc import ABC
 from copy import deepcopy
-from dataclasses import fields
+from dataclasses import asdict, fields
+from functools import singledispatchmethod
 from typing import (
     Any,
     Generic,
@@ -8,28 +9,35 @@ from typing import (
     TypeVar,
     cast,
     get_args,
-    override,
 )
 
-from my_aiohttp_app import dto
 from my_aiohttp_app.utils import DataclassInstance
 
 T = TypeVar("T", bound=DataclassInstance)
 
 
-class ResponseSchema(ABC, Generic[T]):
+class Serializer(ABC, Generic[T]):
     @property
-    def dto_model(self) -> Type[T]:
+    def target_model(self) -> Type[T]:
         return cast(
             Type[T], get_args(self.__orig_bases__[0])[0]  # type: ignore[attr-defined]
         )
 
-    def __init__(self, **response_data: Any):
+    @singledispatchmethod  # type: ignore[misc]
+    def __init__(self, response_data):
+        raise NotImplementedError()
+
+    @__init__.register
+    def _(self, response_data: dict):
         self.response_data = deepcopy(response_data)
+
+    @__init__.register
+    def _(self, response_data: DataclassInstance):
+        self.response_data = asdict(response_data)
 
     @property
     def dataclass_fields(self) -> set[str]:
-        return {f.name for f in fields(self.dto_model)}
+        return {f.name for f in fields(self.target_model)}
 
     def load(self) -> dict[str, Any]:
         transformed_data = self.transform()
@@ -43,20 +51,10 @@ class ResponseSchema(ABC, Generic[T]):
             raise RuntimeError(f"Error during data transformation: {e}")
         return result
 
-    def get_object(self) -> T:
-        return self.dto_model(**self.load())
+    def get_object(self, **defaults) -> T:
+        defaults = defaults or {}
+        return self.target_model(**self.load(), **defaults)
 
     def transform(self) -> dict[str, Any]:
-        return deepcopy(self.response_data)
-
-
-class RepositoryResponseSchema(ResponseSchema[dto.Repository]):
-    @override
-    def transform(self) -> dict[str, Any]:
-        transformed_data = super().transform()
-        transformed_data["owner"] = transformed_data["owner"]["login"]
+        transformed_data = deepcopy(self.response_data)
         return transformed_data
-
-
-class RepositoryAuthorCommitsNumSchema(ResponseSchema[dto.RepositoryAuthorCommitsNum]):
-    pass

@@ -1,72 +1,44 @@
-from dataclasses import asdict, astuple
 from datetime import datetime
 
-from my_aiohttp_app import clickhouse
+from aiohttp import ClientSession
+
+from my_aiohttp_app.clickhouse import managers, serializers
 from my_aiohttp_app.dto import Repository
 
 
 async def save_repositories(repositories: list[Repository]):
-    await clickhouse.RepositoryManager.write(
-        _get_transformed_repositories(repositories)
-    )
-    await clickhouse.RepositoriesAuthorsCommitsManager.write(
-        _get_transformed_repositories_author_commits(repositories),
-    )
-    await clickhouse.RepositoriesPositionsManager.write(
-        _get_transformed_repositories_positions(repositories),
-    )
-
-
-def _get_transformed_repositories(repositories: list[Repository]):
-    result = []
+    ch_repos = []
     updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    for repository in repositories:
-        repository_data = asdict(repository)
-
-        repository_data.pop("position", None)
-        repository_data.pop("authors_commits_num_today", None)
-
-        result.append(
-            astuple(
-                clickhouse.RepositoryManager.new_object(
-                    **repository_data,
-                    updated=updated,
-                )
-            )
+    for repo in repositories:
+        ch_repo = serializers.RepositorySerializer(repo).get_object(
+            updated=updated,
         )
-    return result
+        ch_repos.append(ch_repo)
 
+    async with ClientSession() as session:
+        await managers.RepositoryManager(session).write(ch_repos)
 
-def _get_transformed_repositories_author_commits(repositories: list[Repository]):
-    result = []
+    ch_repo_authors_commits = []
     today = datetime.today().strftime("%Y-%m-%d")
-    for repository in repositories:
-        for authors_commits_num_today in repository.authors_commits_num_today:
-            authors_commits_num_today_data = asdict(authors_commits_num_today)
+    for repo in repositories:
+        for authors_commits_num_today in repo.authors_commits_num_today:
+            ch_repo_author_commit = serializers.RepositoriesAuthorsCommitsSerializer(
+                authors_commits_num_today
+            ).get_object(date=today, repo=repo.name)
+            ch_repo_authors_commits.append(ch_repo_author_commit)
 
-            result.append(
-                astuple(
-                    clickhouse.RepositoriesAuthorsCommitsManager.new_object(
-                        **authors_commits_num_today_data,
-                        repo=repository.name,
-                        date=today,
-                    )
-                )
-            )
-    return result
-
-
-def _get_transformed_repositories_positions(repositories: list[Repository]):
-    result = []
-    today = datetime.today().strftime("%Y-%m-%d")
-    for repository in repositories:
-        result.append(
-            astuple(
-                clickhouse.RepositoriesPositionsManager.new_object(
-                    position=repository.position,
-                    repo=repository.name,
-                    date=today,
-                )
-            )
+    async with ClientSession() as session:
+        await managers.RepositoriesAuthorsCommitsManager(session).write(
+            ch_repo_authors_commits
         )
-    return result
+
+    ch_repos_position = []
+    today = datetime.today().strftime("%Y-%m-%d")
+    for repo in repositories:
+        ch_repo_position = serializers.RepositoriesPositionsSerializer(repo).get_object(
+            date=today,
+        )
+        ch_repos_position.append(ch_repo_position)
+
+    async with ClientSession() as session:
+        await managers.RepositoriesPositionsManager(session).write(ch_repos_position)

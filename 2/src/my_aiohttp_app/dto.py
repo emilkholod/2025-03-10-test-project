@@ -1,13 +1,13 @@
 from dataclasses import dataclass, field
 
 
-@dataclass
+@dataclass(kw_only=True, slots=True)
 class RepositoryAuthorCommitsNum:
     author: str
     commits_num: int
 
 
-@dataclass
+@dataclass(kw_only=True, slots=True)
 class Repository:
     name: str
     owner: str

@@ -7,7 +7,7 @@ from typing import Any, Final
 from aiohttp import ClientSession
 from aiolimiter import AsyncLimiter
 
-from my_aiohttp_app import config, schema
+from my_aiohttp_app import config, serializers
 from my_aiohttp_app.dto import Repository
 from my_aiohttp_app.utils import RetryException, retry
 
@@ -86,7 +86,7 @@ class GithubReposScrapper:
             return []
 
         repositories = [
-            schema.RepositoryResponseSchema(**r).get_object() for r in repositories_data
+            serializers.RepositorySerializer(r).get_object() for r in repositories_data
         ]
 
         params = {"since": (datetime.now() - timedelta(days=1)).isoformat()}
@@ -104,8 +104,8 @@ class GithubReposScrapper:
                 c["commit"]["author"]["name"] for c in author_commits_num
             )
             repo.authors_commits_num_today = [
-                schema.RepositoryAuthorCommitsNumSchema(
-                    author=author, commits_num=commits_num
+                serializers.RepositoryAuthorCommitsNumSerializer(
+                    {"author": author, "commits_num": commits_num}
                 ).get_object()
                 for author, commits_num in commits_per_author.items()
             ]
