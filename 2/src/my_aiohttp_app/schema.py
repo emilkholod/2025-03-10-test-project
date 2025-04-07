@@ -1,23 +1,40 @@
 from abc import ABC
 from copy import deepcopy
-from dataclasses import fields
-from typing import Any, Generic, Type, TypeVar, get_args, override
+from dataclasses import Field, fields
+from typing import (
+    Any,
+    ClassVar,
+    Generic,
+    Protocol,
+    Type,
+    TypeVar,
+    cast,
+    get_args,
+    override,
+)
 
 from my_aiohttp_app import dto
 
-T = TypeVar("T")
+
+class DataclassInstance(Protocol):
+    __dataclass_fields__: ClassVar[dict[str, Field[Any]]]
+
+
+T = TypeVar("T", bound=DataclassInstance)
 
 
 class ResponseSchema(ABC, Generic[T]):
     @property
     def dto_model(self) -> Type[T]:
-        return get_args(self.__orig_bases__[0])[0]  # type: ignore[attr-defined]
+        return cast(
+            Type[T], get_args(self.__orig_bases__[0])[0]  # type: ignore[attr-defined]
+        )
 
-    def __init__(self, **response_data):
+    def __init__(self, **response_data: Any):
         self.response_data = deepcopy(response_data)
 
     @property
-    def dataclass_fields(self):
+    def dataclass_fields(self) -> set[str]:
         return {f.name for f in fields(self.dto_model)}
 
     def load(self) -> dict[str, Any]:
@@ -41,7 +58,7 @@ class ResponseSchema(ABC, Generic[T]):
 
 class RepositoryResponseSchema(ResponseSchema[dto.Repository]):
     @override
-    def transform(self):
+    def transform(self) -> dict[str, Any]:
         transformed_data = super().transform()
         transformed_data["owner"] = transformed_data["owner"]["login"]
         return transformed_data
