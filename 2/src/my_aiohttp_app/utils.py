@@ -1,5 +1,7 @@
 import asyncio
+from dataclasses import Field
 from functools import wraps
+from typing import Any, ClassVar, Protocol
 
 from aiohttp import ClientError
 
@@ -29,3 +31,7 @@ async def retry(func):
         return result
 
     return wrapper
+
+
+class DataclassInstance(Protocol):
+    __dataclass_fields__: ClassVar[dict[str, Field[Any]]]

@@ -1,11 +1,9 @@
 from abc import ABC
 from copy import deepcopy
-from dataclasses import Field, fields
+from dataclasses import fields
 from typing import (
     Any,
-    ClassVar,
     Generic,
-    Protocol,
     Type,
     TypeVar,
     cast,
@@ -14,11 +12,7 @@ from typing import (
 )
 
 from my_aiohttp_app import dto
-
-
-class DataclassInstance(Protocol):
-    __dataclass_fields__: ClassVar[dict[str, Field[Any]]]
-
+from my_aiohttp_app.utils import DataclassInstance
 
 T = TypeVar("T", bound=DataclassInstance)
 
