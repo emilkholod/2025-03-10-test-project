@@ -3,7 +3,7 @@ from datetime import date, datetime
 
 
 @dataclass(kw_only=True, slots=True)
-class RepositorySchema:
+class RepositoryClickhouseSchema:
     name: str
     owner: str
     stars: int
@@ -14,7 +14,7 @@ class RepositorySchema:
 
 
 @dataclass(kw_only=True, slots=True)
-class RepositoriesAuthorsCommitsSchema:
+class RepositoriesAuthorsCommitsClickhouseSchema:
     date: date
     repo: str
     author: str
@@ -22,7 +22,7 @@ class RepositoriesAuthorsCommitsSchema:
 
 
 @dataclass(kw_only=True, slots=True)
-class RepositoriesPositionsSchema:
+class RepositoriesPositionsClickhouseSchema:
     date: date
     repo: str
     position: int

@@ -4,7 +4,7 @@ from my_aiohttp_app.clickhouse import schemas
 from my_aiohttp_app.core.serializer import Serializer
 
 
-class RepositorySerializer(Serializer[schemas.RepositorySchema]):
+class RepositorySerializer(Serializer[schemas.RepositoryClickhouseSchema]):
     @override
     def transform(self) -> dict[str, Any]:
         transformed_data = super().transform()
@@ -16,12 +16,14 @@ class RepositorySerializer(Serializer[schemas.RepositorySchema]):
 
 
 class RepositoriesAuthorsCommitsSerializer(
-    Serializer[schemas.RepositoriesAuthorsCommitsSchema]
+    Serializer[schemas.RepositoriesAuthorsCommitsClickhouseSchema]
 ):
     pass
 
 
-class RepositoriesPositionsSerializer(Serializer[schemas.RepositoriesPositionsSchema]):
+class RepositoriesPositionsSerializer(
+    Serializer[schemas.RepositoriesPositionsClickhouseSchema]
+):
     @override
     def transform(self) -> dict[str, Any]:
         transformed_data = super().transform()

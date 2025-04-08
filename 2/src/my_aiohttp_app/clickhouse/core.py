@@ -2,11 +2,13 @@ from abc import ABC, abstractmethod
 from dataclasses import astuple, fields
 from itertools import batched
 
+from aiohttp import ClientSession
+
 from my_aiohttp_app.clickhouse.client import get_client
 
 
 class ClickhouseManager(ABC):
-    def __init__(self, session=None):
+    def __init__(self, session: ClientSession | None = None):
         self.session = session
 
     @property

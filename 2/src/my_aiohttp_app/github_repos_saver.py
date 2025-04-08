@@ -2,12 +2,12 @@ from datetime import datetime
 
 from aiohttp import ClientSession
 
-from my_aiohttp_app.clickhouse import managers, serializers
+from my_aiohttp_app.clickhouse import managers, schemas, serializers
 from my_aiohttp_app.dto import Repository
 
 
 async def save_repositories(repositories: list[Repository]):
-    ch_repos = []
+    ch_repos: list[schemas.RepositoryClickhouseSchema] = []
     updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     for repo in repositories:
         ch_repo = serializers.RepositorySerializer(repo).get_object(
@@ -18,7 +18,9 @@ async def save_repositories(repositories: list[Repository]):
     async with ClientSession() as session:
         await managers.RepositoryManager(session).write(ch_repos)
 
-    ch_repo_authors_commits = []
+    ch_repo_authors_commits: list[
+        schemas.RepositoriesAuthorsCommitsClickhouseSchema
+    ] = []
     today = datetime.today().strftime("%Y-%m-%d")
     for repo in repositories:
         for authors_commits_num_today in repo.authors_commits_num_today:
@@ -32,7 +34,7 @@ async def save_repositories(repositories: list[Repository]):
             ch_repo_authors_commits
         )
 
-    ch_repos_position = []
+    ch_repos_position: list[schemas.RepositoriesPositionsClickhouseSchema] = []
     today = datetime.today().strftime("%Y-%m-%d")
     for repo in repositories:
         ch_repo_position = serializers.RepositoriesPositionsSerializer(repo).get_object(
