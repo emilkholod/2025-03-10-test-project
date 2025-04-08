@@ -8,7 +8,8 @@ MCR = env.int("MCR", 5)
 RPS = env.int("RPS", 10)
 """Requests per second"""
 
-GITHUB_ACCESS_TOKEN = env.str("GITHUB_ACCESS_TOKEN", "")
+GITHUB_API_BASE_URL: str = "https://api.github.com"
+GITHUB_ACCESS_TOKEN: str = env.str("GITHUB_ACCESS_TOKEN", "")
 
 CLICKHOUSE_HOST: str = env.str("CLICKHOUSE_HOST", default="clickhouse")
 CLICKHOUSE_PORT: int = env.int("CLICKHOUSE_PORT", default=8123)

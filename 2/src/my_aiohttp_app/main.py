@@ -2,7 +2,7 @@ import asyncio
 from collections import Counter
 from datetime import datetime, timedelta
 from itertools import count
-from typing import Any, Final
+from typing import Any
 
 from aiohttp import ClientSession
 from aiolimiter import AsyncLimiter
@@ -10,8 +10,6 @@ from aiolimiter import AsyncLimiter
 from my_aiohttp_app import config, serializers
 from my_aiohttp_app.dto import Repository
 from my_aiohttp_app.utils import RetryException, retry
-
-GITHUB_API_BASE_URL: Final[str] = "https://api.github.com"
 
 
 class GithubReposScrapper:
@@ -25,7 +23,7 @@ class GithubReposScrapper:
     async def _make_request(
         self, endpoint: str, method: str = "GET", params: dict[str, Any] | None = None
     ) -> Any:
-        url = f"{GITHUB_API_BASE_URL}/{endpoint}"
+        url = f"{config.GITHUB_API_BASE_URL}/{endpoint}"
         async with self.session.request(method, url, params=params) as response:
             if response.status == 403:
                 reset_time = response.headers.get("X-RateLimit-Reset")
