@@ -1,17 +1,17 @@
 from my_aiohttp_app.clickhouse import schemas
-from my_aiohttp_app.clickhouse.core import ClickhouseManager
+from my_aiohttp_app.clickhouse.core import create_clickhouse_manager
 
+RepositoryManager = create_clickhouse_manager(
+    tablename="test.repositories",
+    schema=schemas.RepositoryClickhouseSchema,
+)
 
-class RepositoryManager(ClickhouseManager):
-    tablename = "test.repositories"
-    schema = schemas.RepositoryClickhouseSchema
+RepositoriesAuthorsCommitsManager = create_clickhouse_manager(
+    tablename="test.repositories_authors_commits",
+    schema=schemas.RepositoriesAuthorsCommitsClickhouseSchema,
+)
 
-
-class RepositoriesAuthorsCommitsManager(ClickhouseManager):
-    tablename = "test.repositories_authors_commits"
-    schema = schemas.RepositoriesAuthorsCommitsClickhouseSchema
-
-
-class RepositoriesPositionsManager(ClickhouseManager):
-    tablename = "test.repositories_positions"
-    schema = schemas.RepositoriesPositionsClickhouseSchema
+RepositoriesPositionsManager = create_clickhouse_manager(
+    tablename="test.repositories_positions",
+    schema=schemas.RepositoriesPositionsClickhouseSchema,
+)
